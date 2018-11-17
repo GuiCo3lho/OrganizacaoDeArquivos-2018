@@ -1,0 +1,12 @@
+Nome: Guilherme Coelho Minervino
+Matricula: 160123046
+
+1-Extrair e utilizar make para compilar codigo
+2-Foram feitas funções para criação,destruição,busca e inserção
+3-Para compilar use "make"
+4-O código possui 3 códigos.c ->  trabalho2.c btree.c e t2funcoes.c
+5-O código possui o cabeçalho trabalho2.h
+6-O código possui um makefile para que possa ser utilizado o make
+7-Apesar de não saber se é permitido, foi tirado o acento do registro com o nome Andre em lista.txt pois estava dando problemas
+
+
