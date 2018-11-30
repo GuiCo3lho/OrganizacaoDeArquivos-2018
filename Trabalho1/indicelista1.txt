@@ -1,0 +1,19 @@
+024312 Leonardo Nunes de Souza|0
+031272 Andreza Pollyana da Sil|64
+035830 Rogerio Augusto de Cast|128
+041881 Ana Luisa Costa Miguel |192
+042290 Bruno Filipe Milare de |256
+042780 Daniel Schowantz Silva |320
+042865 Danilo Silva Marshall  |384
+043217 Erikita Regina Campos d|448
+043341 Fabricio Nallin Violin |512
+044072 Igor Ribeiro de Assis  |576
+045058 Marcio Alexandre Marar |640
+046306 Rodrigo Dias Takase    |704
+046708 Thiago de Moraes Sfredo|768
+046713 Thiago Fernandes Crepal|832
+046802 Tiago Rezende Campos Fa|896
+046944 Vitor Baccetti Garcia  |960
+046946 Vitor Bruno Jacintho de|1024
+046956 Vitor Gouvea Franchi   |1088
+046961 Vitor Paulo Villarino P|1152
