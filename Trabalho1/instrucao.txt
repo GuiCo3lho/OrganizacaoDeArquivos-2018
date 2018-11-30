@@ -1,0 +1,6 @@
+Alunos:
+Carolina Soares Lôbo - 17/0139131
+Guilherme Coelho Minervino - 16/0123046
+
+Para compilar o código, basta executar o comando make.
+Para executar o programa, basta escrever ./trabalho na linha de comando
