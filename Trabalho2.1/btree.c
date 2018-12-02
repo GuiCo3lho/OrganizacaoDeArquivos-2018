@@ -23,19 +23,16 @@ void btPesquisa(TipoRegistro * x,TipoApontador Ap)
       printf("Nao existem paginas na arvore");
       return;
     }
-    cmp = strcmp(x->chavePrimaria,Ap->chaves[i-1].chavePrimaria);
-    while(Ap->numKeys > i && cmp > 0)
+    //cmp = strcmp(x->Chave,Ap->chaves[i-1].Chave);
+    while(Ap->numKeys > i && x->Chave > Ap->chaves[i-1].Chave) i++;
+
+    if(x->Chave == Ap->chaves[i-1].Chave)
     {
-      i++;
-      cmp = strcmp(x->chavePrimaria,Ap->chaves[i-1].chavePrimaria);
-    }
-    if(cmp == 0)
-    {
-      printf("chavePrimaria encontrada na arvore!");
+      printf("Chave encontrada na arvore!");
       return;
     }
 
-    if(cmp < 0)
+    if(x->Chave < Ap->chaves[i-1].Chave)
       btPesquisa(x, Ap->kids[i-1]);
       else
       btPesquisa(x,Ap->kids[i]);
@@ -49,8 +46,8 @@ void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
     k = Ap->numKeys; PosNotFound = (k > 0);
     while (PosNotFound)
     {
-      cmp = strcmp(Reg.chavePrimaria,Ap->chaves[k-1].chavePrimaria);
-      if (cmp >= 0) //Reg.chavePrimaria maior que chave do No arvores
+      //cmp = strcmp(Reg.Chave,Ap->chaves[k-1].Chave);
+      if (Reg.Chave >= Ap->chaves[k-1].Chave) //Reg.Chave maior que chave do No arvores
       {
         PosNotFound = FALSE;
         break;
@@ -68,6 +65,9 @@ void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
 void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu,
           TipoRegistro * RegRetorno, TipoApontador * ApRetorno)
 {
+
+    printf("OI!\n");
+
     int i = 1;
     int j;
     short cmp;
@@ -79,20 +79,17 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu,
       (*ApRetorno) = NULL;
       return;
     }
-    cmp = strcmp(Reg.chavePrimaria,Ap->chaves[i-1].chavePrimaria);
-    while(i<Ap->numKeys && cmp > 0)
-    {
-       i++;
-       cmp = strcmp(Reg.chavePrimaria,Ap->chaves[i-1].chavePrimaria);
-    }
-    cmp = strcmp(Reg.chavePrimaria,Ap->chaves[i-1].chavePrimaria);
-    if(cmp == 0)
+
+    //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
+    while(i<Ap->numKeys && Reg.Chave > Ap->chaves[i-1].Chave) i++;
+    //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
+    if(Reg.Chave == Ap->chaves[i-1].Chave)
     {
       printf("Erro: Registro ja existe na arvore bTree");
       *Cresceu = FALSE;
       return;
     }
-    if(cmp < 0) i--;
+    if(Reg.Chave < Ap->chaves[i-1].Chave) i--;
     btIns(Reg,Ap->kids[i],Cresceu,RegRetorno,ApRetorno);
     if(!*Cresceu) return;
     if(Ap->numKeys < MAX_KEYS) //Pagina com espaço
@@ -101,10 +98,10 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu,
       *Cresceu = FALSE;
       return;
     }
-    /*Overflow da pagina => Divisao */
+    //Overflow da pagina => Divisao
     ApTemp = (TipoApontador)malloc(sizeof(TipoPagina));
     ApTemp->numKeys = 0; ApTemp->kids[0] = NULL;
-    if(i < (MAX_KEYS/2))
+    if(i < (MAX_KEYS/2)+1)
     {
       btInsertInNode(ApTemp,Ap->chaves[MAX_KEYS-1], Ap->kids[MAX_KEYS]);
       Ap->numKeys--;
@@ -113,21 +110,23 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu,
     else btInsertInNode(ApTemp, *RegRetorno, *ApRetorno);
     for(j = (MAX_KEYS/2) + 2; j <= MAX_KEYS; j++)
     {
-      btInsertInNode(ApTemp,Ap->chaves[j-1],Ap->kids[j]);
-      Ap->numKeys = MAX_KEYS/2;
-      ApTemp->kids[0] = Ap->kids[(MAX_KEYS/2) + 1];
-      *RegRetorno = Ap->chaves[MAX_KEYS/2];
-      *ApRetorno = ApTemp;
+        btInsertInNode(ApTemp,Ap->chaves[j-1],Ap->kids[j]);
     }
+    Ap->numKeys = MAX_KEYS/2;
+    ApTemp->kids[0] = Ap->kids[(MAX_KEYS/2) + 1];
+    *RegRetorno = Ap->chaves[MAX_KEYS/2];
+    *ApRetorno = ApTemp;
 }
 
 void btInsere(TipoRegistro Reg, TipoApontador *Ap)
 {
+
+
     bool Cresceu;
     TipoRegistro RegRetorno;
     TipoPagina *ApRetorno, *ApTemp;
     btIns(Reg,*Ap,&Cresceu,&RegRetorno,&ApRetorno);
-    if(Cresceu) /* Arvore cresce na altura pela raiz */
+    if(Cresceu) //Arvore cresce na altura pela raiz
     {
         ApTemp = (TipoPagina *)malloc(sizeof(TipoPagina));
         ApTemp->numKeys = 1;
@@ -135,19 +134,26 @@ void btInsere(TipoRegistro Reg, TipoApontador *Ap)
         ApTemp->kids[1] = ApRetorno;
         ApTemp->kids[0] = *Ap; *Ap = ApTemp;
     }
+
+
 }
 
 void btImprimeI(TipoApontador p, int nivel)
 {
   int i;
-  if(p == NULL) return;
+  if(p == NULL)
+  {
+    printf("Arvore vazia!\n");
+    return;
+  }
+
   printf("Nivel %d :",nivel);
   for(i = 0; i<p->numKeys; i++)
-    printf("%s ", p->chaves[i].chavePrimaria);
-    putchar('\n');
-    nivel++;
-    for(i = 0; i<= p->numKeys; i++)
-    btImprimeI(p->kids[i], nivel);
+      printf("%s ", p->chaves[i].chavePrimaria);
+  putchar('\n');
+  nivel++;
+  for(i = 0; i<= p->numKeys; i++)
+      btImprimeI(p->kids[i], nivel);
 }
 
 void btImprime(TipoApontador p)

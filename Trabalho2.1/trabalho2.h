@@ -1,14 +1,15 @@
 #define MAX_KEYS 3
 #include <stdbool.h>
-
+typedef int TipoChave;
 typedef struct {
+    TipoChave Chave;
+    char Registro[55];
     char chavePrimaria[8];//nome + matricula (8)
     int byteoffset;
-    char nome[41];
-    char matricula[5];
-    char curso[2];
+    char nome[40];
+    int matricula;
+    char curso[3];
     char turma;
-    int teste;
 } TipoRegistro;
 
 typedef struct TipoPagina* TipoApontador;
@@ -22,15 +23,17 @@ typedef struct TipoPagina {
 /*Funcoes da bTree*/
 void btImprime(TipoApontador);
 void btImprimeI(TipoApontador, int );
-void btInsere(TipoRegistro , TipoApontador *);
-void btIns(TipoRegistro , TipoApontador , bool *,
-          TipoRegistro *, TipoApontador * );
+void btInsere(TipoRegistro , TipoApontador*);
+void btIns(TipoRegistro , TipoApontador , bool*, TipoRegistro*, TipoApontador* );
 void btInsertInNode(TipoApontador , TipoRegistro, TipoApontador);
 void btPesquisa(TipoRegistro*,TipoApontador);
-void btInicializa(TipoApontador *);
+void btInicializa(TipoApontador*);
 /*Funcoes para manipulacoes de arquivos*/
-void CriarIndPri(void);
+void CriarIndPri(TipoRegistro*, TipoApontador*);
 int countregisters(FILE*);
+void coletaRegistro(TipoRegistro*,FILE *);
+void imprimeRegistro(TipoRegistro*);
+int ChaveNumerica(char []);
 
 
 

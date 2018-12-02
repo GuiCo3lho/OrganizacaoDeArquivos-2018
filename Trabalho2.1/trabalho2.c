@@ -8,9 +8,8 @@ int main()
 {
   TipoRegistro x;
   TipoPagina * D;
+  btImprime(D);
   btInicializa(&D);
-  CriarIndPri();
+  CriarIndPri(&x,&D);
   free(D);
-  
-
 }
