@@ -6,7 +6,8 @@
 
 void CriarIndPri(void)
 {
-    Registro reg;
+
+    TipoRegistro reg;
     char chaveP[8];
     char ch;
     char NOME_CHAVE[5];
@@ -15,6 +16,7 @@ void CriarIndPri(void)
     z = 0,j = 0,n_registros = 0;
     int tamanhoRegistro;
     FILE * file = fopen("lista.txt","rb");
+    FILE * file2 = fopen("indicelistabt.txt","wb");
     if(file == NULL)
     {
       printf("Arquivo não encontrado");
@@ -64,12 +66,21 @@ void CriarIndPri(void)
 
       reg.byteoffset = tamanhoRegistro*j;
       printf("byteofset:%d\n",reg.byteoffset);
+      fwrite(reg.chavePrimaria,sizeof(char),8,file2);
+      fputs(" ",file2);
+      fprintf(file2,"%d",reg.byteoffset);
+      fputs("\n",file2);
+
+      //btInsere(reg,p);
       j++;
       z = 0;
   }
 
+//  btImprime(*p);
+
     printf("==============================================================\n");
     fclose(file);
+    fclose(file2);
     free(Registro);
 }
 

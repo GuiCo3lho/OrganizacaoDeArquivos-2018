@@ -6,5 +6,11 @@
 
 int main()
 {
+  TipoRegistro x;
+  TipoPagina * D;
+  btInicializa(&D);
   CriarIndPri();
+  free(D);
+  
+
 }
