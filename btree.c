@@ -162,6 +162,111 @@ void btImprime(TipoApontador p)
   int n = 0; btImprimeI(p,n);
 }
 
+void btReconstitui(TipoApontador ApPag, TipoApontador ApPai,
+                 int PosPai, short *Diminuiu)
+{
+    TipoPagina *Aux;  long DispAux, j;
+    if (PosPai < ApPai->numKeys)  /* Aux = TipoPaginumKeysa a direita de ApPag */
+    { Aux = ApPai->kids[PosPai+1];  DispAux = (Aux->numKeys - (MAX_KEYS/2)+1) / 2;
+      ApPag->chaves[ApPag->numKeys] = ApPai->chaves[PosPai];
+      ApPag->kids[ApPag->numKeys + 1] = Aux->kids[0];  ApPag->numKeys++;
+      if (DispAux > 0)  /* Existe folga: transfere de Aux para ApPag */
+      { for (j = 1; j < DispAux; j++)
+          btInsertInNode(ApPag, Aux->chaves[j-1], Aux->kids[j]);
+        ApPai->chaves[PosPai] = Aux->chaves[DispAux-1];  Aux->numKeys -= DispAux;
+        for (j = 0; j < Aux->numKeys; j++) Aux->chaves[j] = Aux->chaves[j + DispAux];
+        for (j = 0; j <= Aux->numKeys; j++) Aux->kids[j] = Aux->kids[j + DispAux];
+        *Diminuiu = FALSE;
+      }
+      else /* Fusao: intercala Aux em ApPag e libera Aux */
+        { for (j = 1; j <= (MAX_KEYS/2); j++)
+            btInsertInNode(ApPag, Aux->chaves[j-1], Aux->kids[j]);
+          free(Aux);
+          for (j = PosPai + 1; j < ApPai->numKeys; j++)
+            { ApPai->chaves[j-1] = ApPai->chaves[j];
+  	    ApPai->kids[j] = ApPai->kids[j+1];
+  	  }
+          ApPai->numKeys--;
+          if (ApPai->numKeys >= (MAX_KEYS/2)) *Diminuiu = FALSE;
+        }
+    }
+    else /* Aux = TipoPagina a esquerda de ApPag */
+      { Aux = ApPai->kids[PosPai-1]; DispAux = (Aux->numKeys - (MAX_KEYS/2)+1) / 2;
+        for (j = ApPag->numKeys; j >= 1; j--) ApPag->chaves[j] = ApPag->chaves[j-1];
+        ApPag->chaves[0] = ApPai->chaves[PosPai-1];
+        for (j = ApPag->numKeys; j >= 0; j--) ApPag->kids[j+1] = ApPag->kids[j];
+        ApPag->numKeys++;
+        if (DispAux > 0) /* Existe folga: transf. de Aux para ApPag */
+        { for (j = 1; j < DispAux; j++)
+            btInsertInNode(ApPag, Aux->chaves[Aux->numKeys - j],
+  	                 Aux->kids[Aux->numKeys - j + 1]);
+          ApPag->kids[0] = Aux->kids[Aux->numKeys - DispAux + 1];
+          ApPai->chaves[PosPai-1] = Aux->chaves[Aux->numKeys - DispAux];
+          Aux->numKeys -= DispAux;  *Diminuiu = FALSE;
+        }
+        else /* Fusao: intercala ApPag em Aux e libera ApPag */
+          { for (j = 1; j <= (MAX_KEYS/2); j++)
+              btInsertInNode(Aux, ApPag->chaves[j-1], ApPag->kids[j]);
+            free(ApPag);  ApPai->numKeys--;
+            if (ApPai->numKeys >= (MAX_KEYS/2))  *Diminuiu = FALSE;
+          }
+      }
+}
+
+void btAntecessor(TipoApontador Ap, int Ind,
+                TipoApontador ApPai, short *Diminuiu)
+{ if (ApPai->kids[ApPai->numKeys] != NULL)
+  { btAntecessor(Ap, Ind, ApPai->kids[ApPai->numKeys], Diminuiu);
+    if (*Diminuiu)
+    btReconstitui(ApPai->kids[ApPai->numKeys], ApPai, (long)ApPai->numKeys, Diminuiu);
+    return;
+  }
+  Ap->chaves[Ind-1] = ApPai->chaves[ApPai->numKeys - 1];
+  ApPai->numKeys--;  *Diminuiu = (ApPai->numKeys < (MAX_KEYS/2));
+}
+
+void btRet(TipoChave Ch, TipoApontador *Ap, short *Diminuiu)
+{
+    long j, Ind = 1;
+    TipoApontador Pag;
+    if (*Ap == NULL)
+    { printf("Erro: registro nao esta na arvore\n"); *Diminuiu = FALSE;
+      return;
+    }
+    Pag = *Ap;
+    while (Ind < Pag->numKeys && Ch > Pag->chaves[Ind-1].Chave) Ind++;
+    if (Ch == Pag->chaves[Ind-1].Chave)
+    { if (Pag->kids[Ind-1] == NULL)   /* TipoPagina folha */
+      { Pag->numKeys--;
+        *Diminuiu = (Pag->numKeys < (MAX_KEYS/2));
+        for (j = Ind; j <= Pag->numKeys; j++)
+          { Pag->chaves[j-1] = Pag->chaves[j];  Pag->kids[j] = Pag->kids[j+1]; }
+        return;
+      }
+      /* TipoPagina nao e folha: trocar com antecessor */
+      btAntecessor(*Ap, Ind, Pag->kids[Ind-1], Diminuiu);
+      if (*Diminuiu)
+      btReconstitui(Pag->kids[Ind-1], *Ap, Ind - 1, Diminuiu);
+      return;
+    }
+    if (Ch > Pag->chaves[Ind-1].Chave) Ind++;
+    btRet(Ch, &Pag->kids[Ind-1], Diminuiu);
+    if (*Diminuiu) btReconstitui(Pag->kids[Ind-1], *Ap, Ind - 1, Diminuiu);
+}
+
+void btRetira(TipoChave Ch, TipoApontador *Ap)
+{
+    short Diminuiu;
+    TipoApontador Aux;
+    btRet(Ch, Ap, &Diminuiu);
+    if (Diminuiu && (*Ap)->numKeys == 0)  /* Arvore diminui na altura */
+    { Aux = *Ap;   *Ap = Aux->kids[0];
+      free(Aux);
+    }
+}
+
+
+
 
 
 
@@ -191,16 +296,16 @@ ApontadorbTree btCreate(int ordem)
   b = malloc(sizeof(btNode));
   assert(b);
   b->isLeaf = 1;
-  b->numKeys = 0;
+  b->numKeysumKeysumKeysumKeys = 0;
   return b;
 }
-btInsertInNode(ApTemp, *RegRetorno, *ApRetorno);
+btInsertInNode(ApTemp, *RegbtRetorno, *ApRetorno);
 void btDestroy(bTree b)
 {
   int i;
   if(b->isLeaf != 1)
   {
-    for(i = 0; i < b->numKeys + 1;i++){
+    for(i = 0; i < b->numKeysumKeys + 1;i++){
         btDestroy(b->kids[i]);
     }
   }

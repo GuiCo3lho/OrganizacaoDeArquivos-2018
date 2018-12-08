@@ -28,6 +28,11 @@ void btIns(TipoRegistro , TipoApontador , bool*, TipoRegistro*, TipoApontador* )
 void btInsertInNode(TipoApontador , TipoRegistro, TipoApontador);
 void btPesquisa(TipoRegistro*,TipoApontador);
 void btInicializa(TipoApontador*);
+void btRetira(TipoChave , TipoApontador *);
+void btRet(TipoChave , TipoApontador *, short *);
+void btAntecessor(TipoApontador , int , TipoApontador , short *);
+void btReconstitui(TipoApontador , TipoApontador , int , short *);
+
 /*Funcoes para manipulacoes de arquivos*/
 void CriarIndPri(TipoRegistro*, TipoApontador*);
 int countregisters(FILE*);
