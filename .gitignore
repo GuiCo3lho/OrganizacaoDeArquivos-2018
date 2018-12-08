@@ -1,2 +1,2 @@
-*/trabalho2
-btree.o t2funcoes.o trabalho2.o
+trabalho2
+*.o
