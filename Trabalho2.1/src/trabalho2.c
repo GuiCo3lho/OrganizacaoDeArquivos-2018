@@ -40,8 +40,11 @@ int main()
               btTipoRegistro(D);
               break;
       case 5:
-              printf("Entre com a chave Primaria\n");
+
               btBuscarRegistro(D);
+              break;
+      case 6:
+              IncluirRegistro();
               break;
 
       default:

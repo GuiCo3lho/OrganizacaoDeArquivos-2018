@@ -11,12 +11,12 @@ int menu()
     printf("                       Menu do Trabalho 2\n");
     printf("==============================================================\n");
     printf("Escolha a opçao desejada\n");
-    printf("Criar Arvore-B a partir da lista1.txt(1)\n");
-    printf("Visualizar arvore(2)\n");
-    printf("Criar Arquivo de Indice Primario(3)\n");
-    printf("Mostrar informações do TipoRegistro(4))\n");
-    printf("Pesquisar registro(5)\n");
-
+    printf("Criar Arvore-B a partir da lista1.txt                      (1)\n");
+    printf("Visualizar arvore                                          (2)\n");
+    printf("Criar Arquivo de Indice Primario                           (3)\n");
+    printf("Mostrar informações do TipoRegistro                        (4)\n");
+    printf("Pesquisar registro                                         (5)\n");
+    printf("Inserir Registro no arquivo de Dados                       (6)\n");
     printf("Opcao:");
     scanf("%d", &opcao);
     return opcao;
@@ -63,7 +63,7 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
 
     while(j < n_registros)
   {
-      printf("==============================================================\n");
+      printf("==================Inserido registro %d====================\n",j);
 
       fseek(file,tamanhoRegistro*j,SEEK_SET);
       coletaRegistro(Reg,file);//coleta dados do registro
@@ -150,7 +150,7 @@ void coletaRegistro(TipoRegistro * Reg,FILE * arqDados)
 
 
 
-void imprimeRegistro(TipoRegistro Reg)
+void imprimirDados(TipoRegistro Reg)
 {
     printf("Registro:%s ",(char*)Reg.nome);
 
@@ -161,8 +161,16 @@ void imprimeRegistro(TipoRegistro Reg)
     printf("byteofset:%d\n",Reg.byteoffset);
     printf("Chave:%d\n\n",Reg.Chave);
     return;
-
 }
+
+void imprimirRegistro(TipoRegistro Reg){
+    printf("%s ",(char*)Reg.nome);
+    printf(" %.5d", Reg.matricula);
+    printf("  %s", Reg.curso);
+    printf("  %c\n", Reg.turma);
+}
+
+
 //printf("Chave:%s\n",chaveP);
 
 //printf("Registro:%s\n",Registro);

@@ -35,7 +35,7 @@ void btPesquisa(TipoRegistro * x,TipoApontador Ap,int *seek,int * ver)
         *x = Ap->chaves[i-1];
         printf("Chave encontrada na arvore!\n");
         *ver = 1;
-        printf("A%d\n",*ver);
+
         return;
     }
 
@@ -367,7 +367,7 @@ void btTipoRegistroI(TipoApontador p,int nivel)
 
   printf("Nivel %d :\n",nivel);
   for(i = 0; i<p->numKeys; i++)
-      imprimeRegistro(p->chaves[i]);
+      imprimirDados(p->chaves[i]);
   putchar('\n');
   nivel++;
   for(i = 0; i<= p->numKeys; i++)
@@ -382,22 +382,54 @@ void btTipoRegistro(TipoApontador p)
 void btBuscarRegistro(TipoApontador p) {
       int verifica;
     	TipoRegistro Reg;
+      printf("Entre com a chave Primaria\n");
     	printf("Chave: "); scanf("%s", Reg.chavePrimaria);
     	Reg.Chave = ChaveNumerica(Reg.chavePrimaria);
     	int seek = 0;
     	btPesquisa(&Reg,p,&seek,&verifica);
-      printf("%d\n",verifica);
+
       if(verifica == 1){
       	printf("\nConteudo do Registro: \n");
-      	imprimeRegistro(Reg);
+      	imprimirDados(Reg);
       	printf("Numero de buscas (seeks): %d\n", seek);
       	return;
       }
       else{
-        printf("Chave not found\n");
         return;
       }
 }
+
+void IncluirRegistro(void){
+    long pos;
+    FILE * arqDados = fopen("lista.txt","a");
+    pos = ftell(arqDados);
+    printf("Pos:%ld\n",pos);
+    TipoRegistro Reg;
+    printf("Digite os dados do novo Registro\n");
+    printf("Nome: "); scanf("\n%[^\n]", Reg.nome);
+    printf("Matricula:"); scanf("%d",&Reg.matricula);
+    printf("Curso: "); scanf("%s", Reg.curso);
+    printf("Turma: "); scanf("\n%c", &Reg.turma);
+    size_t prevlen = strlen(Reg.nome);
+    memset(Reg.nome + prevlen, ' ', 39 - prevlen);
+    *(Reg.nome + 39) = '\0';
+
+    imprimirRegistro(Reg);
+
+
+
+
+    fprintf(arqDados,"%s\t",(char*)Reg.nome);
+    //fprintf(arqDados,"   ");
+    fprintf(arqDados,"%5.d ",Reg.matricula);
+    fprintf(arqDados," %s\t ",Reg.curso);
+    fprintf(arqDados,"%c\n",Reg.turma);
+
+    imprimirRegistro(Reg);
+    fclose(arqDados);
+
+}
+
 
 
 
