@@ -87,7 +87,7 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu,
     //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
     if(Reg.Chave == Ap->chaves[i-1].Chave)
     {
-      printf("Erro: Registro ja existe na arvore bTree");
+      printf("Erro: Registro ja existe na arvore bTree\n");
       *Cresceu = FALSE;
       return;
     }
@@ -215,10 +215,12 @@ void btReconstitui(TipoApontador ApPag, TipoApontador ApPai,
 
 void btAntecessor(TipoApontador Ap, int Ind,
                 TipoApontador ApPai, short *Diminuiu)
-{ if (ApPai->kids[ApPai->numKeys] != NULL)
-  { btAntecessor(Ap, Ind, ApPai->kids[ApPai->numKeys], Diminuiu);
+{
+   if (ApPai->kids[ApPai->numKeys] != NULL)
+  {
+    btAntecessor(Ap, Ind, ApPai->kids[ApPai->numKeys], Diminuiu);
     if (*Diminuiu)
-    btReconstitui(ApPai->kids[ApPai->numKeys], ApPai, (long)ApPai->numKeys, Diminuiu);
+      btReconstitui(ApPai->kids[ApPai->numKeys], ApPai, (long)ApPai->numKeys, Diminuiu);
     return;
   }
   Ap->chaves[Ind-1] = ApPai->chaves[ApPai->numKeys - 1];
@@ -263,6 +265,52 @@ void btRetira(TipoChave Ch, TipoApontador *Ap)
     { Aux = *Ap;   *Ap = Aux->kids[0];
       free(Aux);
     }
+}
+
+void btGravaI(TipoApontador p, int nivel, FILE* file)
+{
+    long i;
+    if (p == NULL) return;
+    printf("Acessado o Nivel %d -> ", nivel);
+    for (i = 0; i < p->numKeys; i++) {
+        fprintf(file, "%s\t",p->chaves[i].chavePrimaria);
+        fprintf(file, "%d\n", p->chaves[i].byteoffset);
+        if(p->kids[i] == NULL && p->kids[i+1] == NULL)
+        {
+          return;
+        }
+          nivel++;
+          btGravaI(p->kids[i], nivel, file);
+          btGravaI(p->kids[i+1], nivel, file);
+
+
+
+
+
+
+      /*
+      fprintf(file, "%s",p->chaves[i].chavePrimaria);
+      fputs(" ",file);
+      fprintf(file,"%d",p->chaves[i].byteoffset);
+      fputs("\n",file);
+		    btGravaI(p->kids[i], nivel, file);
+        */
+    }
+    putchar('\n');
+}
+
+void btGrava(TipoApontador p, FILE* file)
+{
+    int  n = 0;
+    btGravaI(p, n, file);
+}
+
+void btGravarIndice(TipoApontador Pag) {
+  	FILE * ArquivoIndice;
+  	ArquivoIndice = fopen("indicelista.bt", "w");
+  	btGrava(Pag, ArquivoIndice);
+  	fclose(ArquivoIndice);
+  	return;
 }
 
 

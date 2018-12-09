@@ -11,15 +11,10 @@ int menu()
     printf("                       Menu do Trabalho 2\n");
     printf("==============================================================\n");
     printf("Escolha a opçao desejada\n");
-    printf("Criar Arquivo de Indice Primario(1)\n");
-    printf("Visualizar Indice Primario e seus respectivos Registros(2)\n");
-    printf("Imprimir chaves primarias contidas na arvoreB no monitor(x)\n");
-    printf("Visualizar arvore(3)\n");
-    printf("Mostrar Indice primario no monitor(4)\n");
-    printf("Buscar chave na arvore(5))\n");
-    printf("Incluir Registro(6)\n");
-    printf("Remover Registro(7)\n");
-    printf("Sair do programa (0)\n");
+    printf("Criar Arvore-B a partir da lista1.txt(1)\n");
+    printf("Visualizar arvore(2)\n");
+    printf("Criar Arquivo de Indice Primario(3)\n");
+
     printf("Opcao:");
     scanf("%d", &opcao);
     return opcao;
@@ -38,8 +33,9 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     int z,j,n_registros;
     z = 0,j = 0,n_registros = 0;
     int tamanhoRegistro;
+    char * Registro;
     FILE * file = fopen("lista.txt","rb");
-    FILE * file2 = fopen("indicelistabt.txt","wb");
+    //FILE * file2 = fopen("indicelistabt.txt","wb");
     if(file == NULL)
     {
       printf("Arquivo não encontrado");
@@ -63,17 +59,12 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     rewind(file);
 
 
-    while(j < n_registros)
+    while(j < 22)
   {
       printf("==============================================================\n");
 
       fseek(file,tamanhoRegistro*j,SEEK_SET);
       coletaRegistro(Reg,file);//coleta dados do registro
-
-
-
-
-
       /* 8 chars do indice primario */
       fseek(file,tamanhoRegistro*j,SEEK_SET);
       fread(NOME_CHAVE,sizeof(char),3,file);
@@ -91,18 +82,16 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
       strcpy(chaveP,NOME_CHAVE);
       strncat(chaveP,MAT_CHAVE,5);
       strcpy(Reg->chavePrimaria,chaveP);
-      //printf("Chave:%s\n",chaveP);
+
       /* Termina de criar 8 chars do indice primario */
       Reg->byteoffset = tamanhoRegistro*j;
       Reg->Chave = ChaveNumerica(Reg->chavePrimaria);
-
-
-      /* Escreve indice primario */
-      fwrite(Reg->chavePrimaria,sizeof(char),8,file2);
-      fputs(" ",file2);
-      fprintf(file2,"%d",Reg->byteoffset);
-      fputs("\n",file2);
       btInsere(*Reg,Dicionario);
+      //imprimeRegistro(Reg);
+
+
+
+
 
       //imprimeRegistro(Reg);
 
@@ -114,8 +103,8 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
 
     printf("==============================================================\n");
     fclose(file);
-    fclose(file2);
-    //free(Registro);
+    //fclose(file2);
+
 }
 
 int ChaveNumerica(char StringChave[])

@@ -10,10 +10,10 @@ int main()
   int opcao;
   TipoRegistro x;
   TipoPagina * D;
-  btImprime(D);
   btInicializa(&D);
-  CriarIndPri(&x,&D);
   btImprime(D);
+
+  //btImprime(D);
   opcao = menu();
   while(opcao != -1)
   {
@@ -23,13 +23,20 @@ int main()
 
               getchar();
               return 0;
-      case 3:
-              printf("OI\n");
+      case 1:
+              printf("Árvore B Criada!\n");
+              CriarIndPri(&x,&D);
               break;
       case 2:
-              printf("Arrombado!\n");
+              printf("Árvore B virtual!\n");
+              btImprime(D);
+              break;
+      case 3:
+              printf("Indices gravados em indicelista.bt!\n");
+              btGravarIndice(D);
               break;
       default:
+
               printf("Opcao invalida\n");
               break;
 
