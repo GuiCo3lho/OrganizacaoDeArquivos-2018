@@ -15,13 +15,16 @@ void btInicializa(TipoApontador * Dicionario)
     *Dicionario = NULL;
 }
 
-void btPesquisa(TipoRegistro * x,TipoApontador Ap)
+void btPesquisa(TipoRegistro * x,TipoApontador Ap,int *seek,int * ver)
 {
+
+    (*seek)++;
     short cmp;
     int i = 1;
     if (Ap == NULL)
     {
-      printf("Nao existem paginas na arvore");
+      printf("Nao existem paginas na arvore\n");
+      *ver = 0;
       return;
     }
     //cmp = strcmp(x->Chave,Ap->chaves[i-1].Chave);
@@ -29,16 +32,43 @@ void btPesquisa(TipoRegistro * x,TipoApontador Ap)
 
     if(x->Chave == Ap->chaves[i-1].Chave)
     {
-      *x = Ap->chaves[i-1];
-      printf("Chave encontrada na arvore!");
-      return;
+        *x = Ap->chaves[i-1];
+        printf("Chave encontrada na arvore!\n");
+        *ver = 1;
+        printf("A%d\n",*ver);
+        return;
     }
 
     if(x->Chave < Ap->chaves[i-1].Chave)
-      btPesquisa(x, Ap->kids[i-1]);
-      else
-      btPesquisa(x,Ap->kids[i]);
-  }
+    {
+        if(Ap->kids[i-1] == NULL)
+        {
+          printf("Chave nao encontrada\n");
+          *ver = 0;
+          return;
+        }
+        else
+          btPesquisa(x, Ap->kids[i-1],seek,ver);
+    }
+
+    if(x->Chave > Ap->chaves[i-1].Chave)
+     {
+        if(Ap->kids[i] == NULL)
+        {
+          printf("Chave nao encontrada\n");
+          *ver = 0;
+          return;
+        }
+        else
+          btPesquisa(x, Ap->kids[i],seek,ver);
+     }
+
+}
+
+
+
+
+
 
 void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
 {
@@ -266,7 +296,7 @@ void btRetira(TipoChave Ch, TipoApontador *Ap)
       free(Aux);
     }
 }
-
+/*
 void btGravaI(TipoApontador p, int nivel, FILE* file)
 {
     long i;
@@ -275,14 +305,30 @@ void btGravaI(TipoApontador p, int nivel, FILE* file)
     for (i = 0; i < p->numKeys; i++) {
         fprintf(file, "%s\t",p->chaves[i].chavePrimaria);
         fprintf(file, "%d\n", p->chaves[i].byteoffset);
-        if(p->kids[i] == NULL && p->kids[i+1] == NULL)
+      if(p->kids[i] == NULL && p->kids[i+1] == NULL)
         {
           return;
         }
           nivel++;
           btGravaI(p->kids[i], nivel, file);
           btGravaI(p->kids[i+1], nivel, file);
+          */
 
+void btGravaI(TipoApontador p, int nivel, FILE *file)
+{
+  long i;
+  if (p == NULL) return;
+  printf("Acessado nivel %d :\n",nivel);
+  for(i = 0; i<p->numKeys; i++)
+  {
+    fprintf(file, "%s\t",p->chaves[i].chavePrimaria);
+    fprintf(file, "%d\n", p->chaves[i].byteoffset);
+  }
+
+  nivel++;
+  for(i = 0; i<= p->numKeys; i++)
+    btGravaI(p->kids[i], nivel,file);
+}
 
 
 
@@ -295,9 +341,7 @@ void btGravaI(TipoApontador p, int nivel, FILE* file)
       fputs("\n",file);
 		    btGravaI(p->kids[i], nivel, file);
         */
-    }
-    putchar('\n');
-}
+
 
 void btGrava(TipoApontador p, FILE* file)
 {
@@ -312,6 +356,49 @@ void btGravarIndice(TipoApontador Pag) {
   	fclose(ArquivoIndice);
   	return;
 }
+
+void btTipoRegistroI(TipoApontador p,int nivel)
+{
+  long i;
+  if(p == NULL)
+  {
+    return;
+  }
+
+  printf("Nivel %d :\n",nivel);
+  for(i = 0; i<p->numKeys; i++)
+      imprimeRegistro(p->chaves[i]);
+  putchar('\n');
+  nivel++;
+  for(i = 0; i<= p->numKeys; i++)
+      btTipoRegistroI(p->kids[i], nivel);
+}
+
+void btTipoRegistro(TipoApontador p)
+{
+  int n = 0; btTipoRegistroI(p,n);
+}
+
+void btBuscarRegistro(TipoApontador p) {
+      int verifica;
+    	TipoRegistro Reg;
+    	printf("Chave: "); scanf("%s", Reg.chavePrimaria);
+    	Reg.Chave = ChaveNumerica(Reg.chavePrimaria);
+    	int seek = 0;
+    	btPesquisa(&Reg,p,&seek,&verifica);
+      printf("%d\n",verifica);
+      if(verifica == 1){
+      	printf("\nConteudo do Registro: \n");
+      	imprimeRegistro(Reg);
+      	printf("Numero de buscas (seeks): %d\n", seek);
+      	return;
+      }
+      else{
+        printf("Chave not found\n");
+        return;
+      }
+}
+
 
 
 

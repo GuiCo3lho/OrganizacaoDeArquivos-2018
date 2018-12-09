@@ -14,6 +14,8 @@ int menu()
     printf("Criar Arvore-B a partir da lista1.txt(1)\n");
     printf("Visualizar arvore(2)\n");
     printf("Criar Arquivo de Indice Primario(3)\n");
+    printf("Mostrar informações do TipoRegistro(4))\n");
+    printf("Pesquisar registro(5)\n");
 
     printf("Opcao:");
     scanf("%d", &opcao);
@@ -59,7 +61,7 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     rewind(file);
 
 
-    while(j < 22)
+    while(j < n_registros)
   {
       printf("==============================================================\n");
 
@@ -148,16 +150,16 @@ void coletaRegistro(TipoRegistro * Reg,FILE * arqDados)
 
 
 
-void imprimeRegistro(TipoRegistro * Reg)
+void imprimeRegistro(TipoRegistro Reg)
 {
-    printf("Registro:%s ",(char*)Reg->nome);
+    printf("Registro:%s ",(char*)Reg.nome);
 
-    printf(" %d", Reg->matricula);
-    printf("  %s", Reg->curso);
-    printf("  %c\n", Reg->turma);
-    printf("chavePrimaria:%s\n",Reg->chavePrimaria);
-    printf("byteofset:%d\n",Reg->byteoffset);
-    printf("Chave:%d\n",Reg->Chave);
+    printf(" %d", Reg.matricula);
+    printf("  %s", Reg.curso);
+    printf("  %c\n", Reg.turma);
+    printf("chavePrimaria:%s\n",Reg.chavePrimaria);
+    printf("byteofset:%d\n",Reg.byteoffset);
+    printf("Chave:%d\n\n",Reg.Chave);
     return;
 
 }
