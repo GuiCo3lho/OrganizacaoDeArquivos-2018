@@ -65,6 +65,10 @@ int main()
 				IncluirRegistro();
 				break;
 
+			case 7:
+        		btRemoverRegistro(D);
+				break;
+
 			// opção inválida -> imprime mensagem de erro
 			default:
 				printf("Opcao invalida\n");

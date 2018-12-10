@@ -48,6 +48,7 @@ void btTipoRegistroI(TipoApontador,int);
 void btTipoRegistro(TipoApontador);
 void btBuscarRegistro(TipoApontador);
 void IncluirRegistro(void);
+void btRemoverRegistro(TipoApontador);
 
 /*Funcoes para manipulacoes de arquivos*/
 void CriarIndPri(TipoRegistro*, TipoApontador*);

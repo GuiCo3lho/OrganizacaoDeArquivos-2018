@@ -611,7 +611,16 @@ void IncluirRegistro(void)
 
 }
 
-
+void btRemoverRegistro(TipoApontador p) 
+{ 
+  TipoRegistro Reg; 
+  printf("Chave: "); 
+  scanf("%s", Reg.chavePrimaria); 
+  Reg.Chave = ChaveNumerica(Reg.chavePrimaria); 
+  btRetira(Reg.Chave, &p); 
+  btImprime(p); 
+  return;
+} 
 
 
 

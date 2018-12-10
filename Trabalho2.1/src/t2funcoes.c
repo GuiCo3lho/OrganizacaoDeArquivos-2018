@@ -20,6 +20,7 @@ int menu()
     printf("Mostrar informações do TipoRegistro                        (4)\n");
     printf("Pesquisar registro                                         (5)\n");
     printf("Inserir Registro no arquivo de Dados                       (6)\n");
+    printf("Remover Registro da arvore                                 (7)\n"); 
     printf("Opcao:");
 
     // ler opção escolhida pelo usuário
@@ -164,8 +165,6 @@ void coletaRegistro(TipoRegistro * Reg,FILE * arqDados)
     fscanf(arqDados,"  %c\n", &Reg->turma);
     return;
 }
-
-
 
 void imprimirDados(TipoRegistro Reg)
 {
