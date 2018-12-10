@@ -8,9 +8,9 @@ int main()
 {
   int opcao;
   TipoRegistro x;
-  //TipoRegistro y;
+  TipoRegistro y;
   TipoPagina * D;
-  
+
 	// executar funções iniciais
 	btInicializa(&D);
 	btImprime(D);
@@ -23,14 +23,14 @@ int main()
 	// checar qual é a opção selecionada e executar o comando pedido
 	while(opcao != -1)
 	{
-		switch(opcao) 
+		switch(opcao)
 		{
 			// opção 0: sair do programa
 			case 0:
 				printf("Até mais!\n");
 				getchar();
 				return 0;
-			
+
 			// opção 1: criar um índice primário
 			case 1:
 				printf("Árvore B Criada!\n");
@@ -43,7 +43,7 @@ int main()
 				btImprime(D);
 				break;
 
-			// opção 3: gravar os índices no arquivo	
+			// opção 3: gravar os índices no arquivo
 			case 3:
 				printf("Indices gravados em indicelista.bt!\n");
 				btGravarIndice(D);
@@ -60,17 +60,19 @@ int main()
 				printf("Entre com a chave Primaria\n");
 				btBuscarRegistro(D);
 				break;
-			
+
 			case 6:
-				IncluirRegistro();
+				IncluirRegistro(&D);
 				break;
+      case 7:
+        btRemoverRegistro(D);
 
 			// opção inválida -> imprime mensagem de erro
 			default:
 				printf("Opcao invalida\n");
 				break;
 		}
-	
+
 		// iguala a opção ao menu
 		opcao = menu();
 	}
@@ -78,4 +80,3 @@ int main()
 	free(D);
 
 }
-

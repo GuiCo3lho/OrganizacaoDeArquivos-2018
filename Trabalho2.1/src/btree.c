@@ -19,7 +19,7 @@ void btInicializa(TipoApontador * Dicionario)
 void btPesquisa(TipoRegistro * x,TipoApontador Ap,int *seek,int * ver)
 {
   (*seek)++;
-  //short cmp;
+  short cmp;
   int i = 1;
 
   // checa se a árvore está vazia
@@ -34,7 +34,7 @@ void btPesquisa(TipoRegistro * x,TipoApontador Ap,int *seek,int * ver)
 
   // procura pelo índice da chave requerida pelo usuário
   while(Ap->numKeys > i && x->Chave > Ap->chaves[i-1].Chave)
-  { 
+  {
     i++;
   }
 
@@ -86,10 +86,10 @@ void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
   // delcarar variáveis
   bool PosNotFound;
   int k;
-  //short cmp;
-  
+  short cmp;
+
   // inicializar variáveis
-  k = Ap->numKeys; 
+  k = Ap->numKeys;
   PosNotFound = (k > 0);
 
   // enquanto não é encontrado o pos
@@ -104,7 +104,7 @@ void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
     Ap->chaves[k] = Ap->chaves[k-1];
     Ap->kids[k+1] = Ap->kids[k];
     k--;
-    if (k < 1) 
+    if (k < 1)
     {
       PosNotFound = FALSE;
     }
@@ -122,7 +122,7 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * Re
   // delcarar variáveis
   int i = 1;
   int j;
-//  short cmp;
+  short cmp;
   TipoApontador ApTemp;
 
   // se Ap tiver endereço NULL
@@ -137,11 +137,11 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * Re
 
   //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
 
-  // enquanto o índice for menor que o número de chaves e o registro da chave 
-  // for maior que o da chave buscada 
+  // enquanto o índice for menor que o número de chaves e o registro da chave
+  // for maior que o da chave buscada
   while(i < Ap->numKeys && Reg.Chave > Ap->chaves[i-1].Chave)
-  { 
-    // incrementar o índice 
+  {
+    // incrementar o índice
     i++;
   }
 
@@ -158,7 +158,7 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * Re
 
   // se o registro da chave for menor que o da chave buscada
   if(Reg.Chave < Ap->chaves[i-1].Chave)
-  { 
+  {
     // decrementar o índice
     i--;
   }
@@ -167,7 +167,7 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * Re
   btIns(Reg,Ap->kids[i],Cresceu,RegRetorno,ApRetorno);
 
   // se não existir o ponteiro Cresceu, retornar
-  if(!*Cresceu) 
+  if(!*Cresceu)
   {
     return;
   }
@@ -194,11 +194,11 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * Re
     btInsertInNode(Ap, *RegRetorno, *ApRetorno);//ApTemp
   }
   // se não for, inserir o nó no lugar selecionado
-  else 
+  else
   {
     btInsertInNode(ApTemp, *RegRetorno, *ApRetorno);
   }
-  
+
   // para j entre a metade do número máximo de chaves e o número máximo de chaves
   for(j = (MAX_KEYS/2) + 2; j <= MAX_KEYS; j++)
   {
@@ -234,7 +234,7 @@ void btInsere(TipoRegistro Reg, TipoApontador *Ap)
   }
 }
 
-// função auxiliar para imprimir árvore B 
+// função auxiliar para imprimir árvore B
 void btImprimeI(TipoApontador p, int nivel)
 {
   // declarar índice i
@@ -267,7 +267,7 @@ void btImprimeI(TipoApontador p, int nivel)
 // imprime árvore-B
 void btImprime(TipoApontador p)
 {
-  int n = 0; 
+  int n = 0;
   // usar função auxiliar para imprimir árvore B
   btImprimeI(p,n);
 }
@@ -276,27 +276,27 @@ void btImprime(TipoApontador p)
 void btReconstitui(TipoApontador ApPag, TipoApontador ApPai, int PosPai, short *Diminuiu)
 {
   // delcarar variáveis
-  TipoPagina *Aux;  
+  TipoPagina *Aux;
   long DispAux, j;
 
   // se o nó posteiror do pai for menor que o ap do pai, trocar ambos de lugar
   if (PosPai < ApPai->numKeys)  /* Aux = TipoPaginumKeysa a direita de ApPag */
-  { 
+  {
     // operação para trocar os dois de lugar
-    Aux = ApPai->kids[PosPai+1];  
+    Aux = ApPai->kids[PosPai+1];
     DispAux = (Aux->numKeys - (MAX_KEYS/2)+1) / 2;
     ApPag->chaves[ApPag->numKeys] = ApPai->chaves[PosPai];
     ApPag->kids[ApPag->numKeys + 1] = Aux->kids[0];  ApPag->numKeys++;
 
     // se o DispAux for maior que 0
     if (DispAux > 0)  /* Existe folga: transfere de Aux para ApPag */
-    { 
+    {
       for (j = 1; j < DispAux; j++)
       {
         btInsertInNode(ApPag, Aux->chaves[j-1], Aux->kids[j]);
       }
 
-      ApPai->chaves[PosPai] = Aux->chaves[DispAux-1];  
+      ApPai->chaves[PosPai] = Aux->chaves[DispAux-1];
       Aux->numKeys -= DispAux;
       for (j = 0; j < Aux->numKeys; j++) Aux->chaves[j] = Aux->chaves[j + DispAux];
       for (j = 0; j <= Aux->numKeys; j++) Aux->kids[j] = Aux->kids[j + DispAux];
@@ -305,7 +305,7 @@ void btReconstitui(TipoApontador ApPag, TipoApontador ApPai, int PosPai, short *
 
     // se não for
     else /* Fusao: intercala Aux em ApPag e libera Aux */
-    { 
+    {
       for (j = 1; j <= (MAX_KEYS/2); j++)
       {
         btInsertInNode(ApPag, Aux->chaves[j-1], Aux->kids[j]);
@@ -313,15 +313,15 @@ void btReconstitui(TipoApontador ApPag, TipoApontador ApPai, int PosPai, short *
       free(Aux);
 
       for (j = PosPai + 1; j < ApPai->numKeys; j++)
-      { 
+      {
         ApPai->chaves[j-1] = ApPai->chaves[j];
         ApPai->kids[j] = ApPai->kids[j+1];
       }
-      
+
       ApPai->numKeys--;
 
       if (ApPai->numKeys >= (MAX_KEYS/2))
-      { 
+      {
         *Diminuiu = FALSE;
       }
     }
@@ -329,24 +329,24 @@ void btReconstitui(TipoApontador ApPag, TipoApontador ApPai, int PosPai, short *
 
   // se o nó posteiror do pai não for menor que o ap do pai, trocar ambos de lugar
   else /* Aux = TipoPagina a esquerda de ApPag */
-  { 
-    Aux = ApPai->kids[PosPai-1]; 
+  {
+    Aux = ApPai->kids[PosPai-1];
     DispAux = (Aux->numKeys - (MAX_KEYS/2)+1) / 2;
 
-    for (j = ApPag->numKeys; j >= 1; j--) 
+    for (j = ApPag->numKeys; j >= 1; j--)
     {
       ApPag->chaves[j] = ApPag->chaves[j-1];
     }
 
     ApPag->chaves[0] = ApPai->chaves[PosPai-1];
     for (j = ApPag->numKeys; j >= 0; j--)
-    { 
+    {
       ApPag->kids[j+1] = ApPag->kids[j];
     }
-    
+
     ApPag->numKeys++;
     if (DispAux > 0) /* Existe folga: transf. de Aux para ApPag */
-    { 
+    {
       for (j = 1; j < DispAux; j++)
       {
         btInsertInNode(ApPag, Aux->chaves[Aux->numKeys - j], Aux->kids[Aux->numKeys - j + 1]);
@@ -354,19 +354,19 @@ void btReconstitui(TipoApontador ApPag, TipoApontador ApPai, int PosPai, short *
 
       ApPag->kids[0] = Aux->kids[Aux->numKeys - DispAux + 1];
       ApPai->chaves[PosPai-1] = Aux->chaves[Aux->numKeys - DispAux];
-      Aux->numKeys -= DispAux;  
+      Aux->numKeys -= DispAux;
       *Diminuiu = FALSE;
     }
     else /* Fusao: intercala ApPag em Aux e libera ApPag */
-    { 
+    {
       for (j = 1; j <= (MAX_KEYS/2); j++)
       {
         btInsertInNode(Aux, ApPag->chaves[j-1], ApPag->kids[j]);
       }
-      free(ApPag);  
+      free(ApPag);
       ApPai->numKeys--;
       if (ApPai->numKeys >= (MAX_KEYS/2))
-      {  
+      {
         *Diminuiu = FALSE;
       }
     }
@@ -387,7 +387,7 @@ void btAntecessor(TipoApontador Ap, int Ind, TipoApontador ApPai, short *Diminui
     return;
   }
   Ap->chaves[Ind-1] = ApPai->chaves[ApPai->numKeys - 1];
-  ApPai->numKeys--;  
+  ApPai->numKeys--;
   *Diminuiu = (ApPai->numKeys < (MAX_KEYS/2));
 }
 
@@ -399,30 +399,30 @@ void btRet(TipoChave Ch, TipoApontador *Ap, short *Diminuiu)
 
   // checa se o nó existe na árvore B
   if (*Ap == NULL)
-  { 
-    printf("Erro: registro nao esta na arvore\n"); 
+  {
+    printf("Erro: registro nao esta na arvore\n");
     *Diminuiu = FALSE;
     return;
   }
-  
-  // se existir, incrementa os índices 
+
+  // se existir, incrementa os índices
   Pag = *Ap;
   while (Ind < Pag->numKeys && Ch > Pag->chaves[Ind-1].Chave)
-  { 
+  {
     Ind++;
   }
 
   // retira o nó da árvore
   if (Ch == Pag->chaves[Ind-1].Chave)
-  { 
+  {
     if (Pag->kids[Ind-1] == NULL)   /* TipoPagina folha */
-    { 
+    {
       Pag->numKeys--;
       *Diminuiu = (Pag->numKeys < (MAX_KEYS/2));
       for (j = Ind; j <= Pag->numKeys; j++)
-      { 
-        Pag->chaves[j-1] = Pag->chaves[j];  
-        Pag->kids[j] = Pag->kids[j+1]; 
+      {
+        Pag->chaves[j-1] = Pag->chaves[j];
+        Pag->kids[j] = Pag->kids[j+1];
       }
       return;
     }
@@ -436,14 +436,14 @@ void btRet(TipoChave Ch, TipoApontador *Ap, short *Diminuiu)
       return;
     }
   }
-  if (Ch > Pag->chaves[Ind-1].Chave) 
+  if (Ch > Pag->chaves[Ind-1].Chave)
   {
     Ind++;
   }
 
   btRet(Ch, &Pag->kids[Ind-1], Diminuiu);
 
-  if (*Diminuiu) 
+  if (*Diminuiu)
   {
     btReconstitui(Pag->kids[Ind-1], *Ap, Ind - 1, Diminuiu);
   }
@@ -457,8 +457,8 @@ void btRetira(TipoChave Ch, TipoApontador *Ap)
   btRet(Ch, Ap, &Diminuiu);
 
   if (Diminuiu && (*Ap)->numKeys == 0)  /* Arvore diminui na altura */
-  { 
-    Aux = *Ap;   
+  {
+    Aux = *Ap;
     *Ap = Aux->kids[0];
     free(Aux);
   }
@@ -485,7 +485,7 @@ void btGravaI(TipoApontador p, int nivel, FILE* file)
 void btGravaI(TipoApontador p, int nivel, FILE *file)
 {
   long i;
-  if (p == NULL) 
+  if (p == NULL)
   {
     return;
   }
@@ -539,7 +539,7 @@ void btTipoRegistroI(TipoApontador p,int nivel)
   }
 
   printf("Nivel %d :\n",nivel);
-  for(i = 0; i<p->numKeys; i++) 
+  for(i = 0; i<p->numKeys; i++)
   {
     imprimirDados(p->chaves[i]);
   }
@@ -554,11 +554,11 @@ void btTipoRegistroI(TipoApontador p,int nivel)
 // determinar tipo de registro
 void btTipoRegistro(TipoApontador p)
 {
-  int n = 0; 
+  int n = 0;
   btTipoRegistroI(p,n);
 }
 
-void btBuscarRegistro(TipoApontador p) 
+void btBuscarRegistro(TipoApontador p)
 {
   int verifica;
   TipoRegistro Reg;
@@ -579,7 +579,7 @@ void btBuscarRegistro(TipoApontador p)
   }
 }
 
-void IncluirRegistro(void)
+void IncluirRegistro(TipoApontador * D)
 {
   long pos;
   FILE * arqDados = fopen("lista.txt","a");
@@ -600,16 +600,45 @@ void IncluirRegistro(void)
 
 
 
-  fprintf(arqDados,"%s\t",(char*)Reg.nome);
+
+
+  fprintf(arqDados,"%s",(char*)Reg.nome);
   //fprintf(arqDados,"   ");
-  fprintf(arqDados,"%5.d ",Reg.matricula);
-  fprintf(arqDados," %s\t ",Reg.curso);
+  fprintf(arqDados,"  %5.d\t",Reg.matricula);
+  fprintf(arqDados,"%s\t",Reg.curso);
   fprintf(arqDados,"%c\n",Reg.turma);
 
   imprimirRegistro(Reg);
   fclose(arqDados);
 
 }
+
+void btRemoverRegistro(TipoApontador p) {
+  	TipoRegistro Reg;
+  	printf("Chave: "); scanf("%s", Reg.chavePrimaria);
+  	Reg.Chave = ChaveNumerica(Reg.chavePrimaria);
+  	btRetira(Reg.Chave, &p);
+  	btImprime(p);
+
+  	return;
+}
+/*
+char * MontarChave(TipoRegistro *Reg)
+{
+    char * ChavePrimaria = malloc(sizeof(char)*9);
+    char VetorMatricula[6];
+    sprintf(VetorMatricula, "%.5d", Reg->matricula);
+    for (int i = 0; i < 3; i++)
+    {
+        chavePrimaria[i] = toupper(Reg->nome[i]);
+    }
+    for (int i = 3; i < 8; i++)
+    {
+        chavePrimaria[i] = VetorMatricula[i-3];
+    }
+    return ChavePrimaria;
+}
+*/
 
 
 
@@ -632,10 +661,10 @@ void IncluirRegistro(void)
 /*
 
   // ler a chave dada pelo usuário
-  printf("Chave: "); 
+  printf("Chave: ");
   scanf("%s", Reg.chavePrimaria);
 
-  
+
   Reg.Chave = ChaveNumerica(Reg.chavePrimaria);
   int seek = 0;
   btPesquisa(&Reg,p,&seek,&verifica);
@@ -658,7 +687,7 @@ void IncluirRegistro(void)
 
 
 
-
+/*
 ApontadorbTree btCreate(int ordem)
 {
   ApontadorbTree b;
