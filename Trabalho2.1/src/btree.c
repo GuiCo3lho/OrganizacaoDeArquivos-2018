@@ -19,7 +19,7 @@ void btInicializa(TipoApontador * Dicionario)
 void btPesquisa(TipoRegistro * x,TipoApontador Ap,int *seek,int * ver)
 {
   (*seek)++;
-  short cmp;
+  //short cmp;
   int i = 1;
 
   // checa se a árvore está vazia
@@ -86,7 +86,7 @@ void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
   // delcarar variáveis
   bool PosNotFound;
   int k;
-  short cmp;
+  //short cmp;
   
   // inicializar variáveis
   k = Ap->numKeys; 
@@ -122,7 +122,7 @@ void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * Re
   // delcarar variáveis
   int i = 1;
   int j;
-  short cmp;
+//  short cmp;
   TipoApontador ApTemp;
 
   // se Ap tiver endereço NULL
@@ -658,7 +658,7 @@ void IncluirRegistro(void)
 
 
 
-/*
+
 ApontadorbTree btCreate(int ordem)
 {
   ApontadorbTree b;

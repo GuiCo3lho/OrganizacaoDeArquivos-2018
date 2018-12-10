@@ -8,7 +8,7 @@ int main()
 {
   int opcao;
   TipoRegistro x;
-  TipoRegistro y;
+  //TipoRegistro y;
   TipoPagina * D;
   
 	// executar funções iniciais

@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS = -I $(IDIR)
+CFLAGS = -Wall -I $(IDIR)
 
 ODIR = ./obj
 IDIR = ../include

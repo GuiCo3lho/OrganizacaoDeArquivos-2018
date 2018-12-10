@@ -37,9 +37,9 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     char ch;
     char NOME_CHAVE[3];
     char MAT_CHAVE[4];
-    int z,j,n_registros;
+    int z, j, n_registros;
     int tamanhoRegistro;
-    char * Registro;
+    //char * Registro;
     FILE * file = fopen("lista.txt","rb");
 
     // inicializar variáveis
@@ -58,7 +58,7 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     tamanhoRegistro = 1;
 
     //Tamanho do registro
-    while(ch = fgetc(file) != '\n')
+    while((ch = fgetc(file)) != '\n')
     {
         tamanhoRegistro++;
     }
@@ -74,13 +74,12 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     // enquanto j for menor que o núvemo total de registros
     while(j < n_registros)
     {
-      printf("==================Inserido registro %d====================\n",j);
-
-        fseek(file,tamanhoRegistro*j,SEEK_SET);
-        coletaRegistro(Reg,file);//coleta dados do registro
+        printf("==================Inserido registro %d====================\n",j);
+        fseek(file, tamanhoRegistro*j, SEEK_SET);
+        coletaRegistro(Reg, file);//coleta dados do registro
         /* 8 chars do indice primario */
-        fseek(file,tamanhoRegistro*j,SEEK_SET);
-        fread(NOME_CHAVE,sizeof(char),3,file);
+        fseek(file, tamanhoRegistro*j, SEEK_SET);
+        fread(NOME_CHAVE, sizeof(char), 3, file);
 
         // enquanto z for menor que o tamanho do nome da chave
         while(z < strlen(NOME_CHAVE))
@@ -93,11 +92,11 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
 
         // procurar pela chave requisitada pelo usuário
         NOME_CHAVE[3] = '\0';
-        fseek(file,((tamanhoRegistro)*j)+41,SEEK_SET);
-        fread(MAT_CHAVE,sizeof(char),5,file);
-        strcpy(chaveP,NOME_CHAVE);
-        strncat(chaveP,MAT_CHAVE,5);
-        strcpy(Reg->chavePrimaria,chaveP);
+        fseek(file, ((tamanhoRegistro)*j)+41, SEEK_SET);
+        fread(MAT_CHAVE, sizeof(char), 5, file);
+        strcpy(chaveP, NOME_CHAVE);
+        strncat(chaveP, MAT_CHAVE, 5);
+        strcpy(Reg->chavePrimaria, chaveP);
 
         /* Termina de criar 8 chars do indice primario */
         Reg->byteoffset = tamanhoRegistro*j;
@@ -124,7 +123,7 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
 int ChaveNumerica(char StringChave[])
 {
     // declarar variáveis
-    int dec = 0, i, j, len;
+    int dec = 0, i, len;
     len = strlen(StringChave);
     for(i=0; i<len; i++)
     {
