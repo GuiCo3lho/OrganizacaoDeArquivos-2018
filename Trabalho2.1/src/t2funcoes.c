@@ -14,11 +14,12 @@ int menu()
     printf("                       Menu do Trabalho 2\n");
     printf("==============================================================\n");
     printf("Escolha a opçao desejada\n");
-    printf("Criar Arvore-B a partir da lista1.txt(1)\n");
-    printf("Visualizar arvore(2)\n");
-    printf("Criar Arquivo de Indice Primario(3)\n");
-    printf("Mostrar informações do TipoRegistro(4))\n");
-    printf("Pesquisar registro(5)\n");
+    printf("Criar Arvore-B a partir da lista1.txt                      (1)\n");
+    printf("Visualizar arvore                                          (2)\n");
+    printf("Criar Arquivo de Indice Primario                           (3)\n");
+    printf("Mostrar informações do TipoRegistro                        (4)\n");
+    printf("Pesquisar registro                                         (5)\n");
+    printf("Inserir Registro no arquivo de Dados                       (6)\n");
     printf("Opcao:");
 
     // ler opção escolhida pelo usuário
@@ -73,7 +74,7 @@ void CriarIndPri(TipoRegistro * Reg, TipoApontador * Dicionario)
     // enquanto j for menor que o núvemo total de registros
     while(j < n_registros)
     {
-        printf("==============================================================\n");
+      printf("==================Inserido registro %d====================\n",j);
 
         fseek(file,tamanhoRegistro*j,SEEK_SET);
         coletaRegistro(Reg,file);//coleta dados do registro
@@ -165,8 +166,9 @@ void coletaRegistro(TipoRegistro * Reg,FILE * arqDados)
     return;
 }
 
-// imprime registro na interface
-void imprimeRegistro(TipoRegistro Reg)
+
+
+void imprimirDados(TipoRegistro Reg)
 {
     printf("Registro:%s ",(char*)Reg.nome);
     printf(" %d", Reg.matricula);
@@ -176,8 +178,16 @@ void imprimeRegistro(TipoRegistro Reg)
     printf("byteofset:%d\n",Reg.byteoffset);
     printf("Chave:%d\n\n",Reg.Chave);
     return;
-
 }
+
+void imprimirRegistro(TipoRegistro Reg){
+    printf("%s ",(char*)Reg.nome);
+    printf(" %.5d", Reg.matricula);
+    printf("  %s", Reg.curso);
+    printf("  %c\n", Reg.turma);
+}
+
+
 //printf("Chave:%s\n",chaveP);
 
 //printf("Registro:%s\n",Registro);

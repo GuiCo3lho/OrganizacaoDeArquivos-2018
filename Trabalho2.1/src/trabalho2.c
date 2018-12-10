@@ -6,12 +6,11 @@
 
 int main()
 {
-	// inicilizar variáveis
-	int opcao;
-	TipoRegistro x;
-	TipoRegistro y;
-	TipoPagina * D;
-
+  int opcao;
+  TipoRegistro x;
+  TipoRegistro y;
+  TipoPagina * D;
+  
 	// executar funções iniciais
 	btInicializa(&D);
 	btImprime(D);
@@ -61,6 +60,10 @@ int main()
 				printf("Entre com a chave Primaria\n");
 				btBuscarRegistro(D);
 				break;
+			
+			case 6:
+				IncluirRegistro();
+				break;
 
 			// opção inválida -> imprime mensagem de erro
 			default:
@@ -75,3 +78,4 @@ int main()
 	free(D);
 
 }
+

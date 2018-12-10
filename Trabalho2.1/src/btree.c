@@ -12,204 +12,204 @@
 // inicializa árvore-B
 void btInicializa(TipoApontador * Dicionario)
 {
-    *Dicionario = NULL;
+  *Dicionario = NULL;
 }
 
 // pesquisa na árvore-B
 void btPesquisa(TipoRegistro * x,TipoApontador Ap,int *seek,int * ver)
 {
-    (*seek)++;
-    short cmp;
-    int i = 1;
+  (*seek)++;
+  short cmp;
+  int i = 1;
 
-    // checa se a árvore está vazia
-    if (Ap == NULL)
+  // checa se a árvore está vazia
+  if (Ap == NULL)
+  {
+    printf("Nao existem paginas na arvore\n");
+    *ver = 0;
+    return;
+  }
+
+  //cmp = strcmp(x->Chave,Ap->chaves[i-1].Chave);
+
+  // procura pelo índice da chave requerida pelo usuário
+  while(Ap->numKeys > i && x->Chave > Ap->chaves[i-1].Chave)
+  { 
+    i++;
+  }
+
+  // se a chave encontrada é igual à requerida, imprime uma mensagem de sucesso
+  if(x->Chave == Ap->chaves[i-1].Chave)
+  {
+    *x = Ap->chaves[i-1];
+    printf("Chave encontrada na arvore!\n");
+    *ver = 1;
+
+    return;
+  }
+
+  // se a chave encontrada é menor que a requerida, imprime uma mensagem de falha
+  if(x->Chave < Ap->chaves[i-1].Chave)
+  {
+    if(Ap->kids[i-1] == NULL)
     {
-      printf("Nao existem paginas na arvore\n");
+      printf("Chave nao encontrada\n");
       *ver = 0;
       return;
     }
-
-    //cmp = strcmp(x->Chave,Ap->chaves[i-1].Chave);
-
-    // procura pelo índice da chave requerida pelo usuário
-    while(Ap->numKeys > i && x->Chave > Ap->chaves[i-1].Chave)
-    { 
-      i++;
-    }
-
-    // se a chave encontrada é igual à requerida, imprime uma mensagem de sucesso
-    if(x->Chave == Ap->chaves[i-1].Chave)
+    else
     {
-        *x = Ap->chaves[i-1];
-        printf("Chave encontrada na arvore!\n");
-        *ver = 1;
-        printf("A%d\n",*ver);
-        return;
+      btPesquisa(x, Ap->kids[i-1],seek,ver);
     }
+  }
 
-    // se a chave encontrada é menor que a requerida, imprime uma mensagem de falha
-    if(x->Chave < Ap->chaves[i-1].Chave)
+  // se a chave encontrada é menor que a requerida, imprime uma mensagem de falha
+  if(x->Chave > Ap->chaves[i-1].Chave)
+  {
+    if(Ap->kids[i] == NULL)
     {
-        if(Ap->kids[i-1] == NULL)
-        {
-          printf("Chave nao encontrada\n");
-          *ver = 0;
-          return;
-        }
-        else
-        {
-          btPesquisa(x, Ap->kids[i-1],seek,ver);
-        }
+      printf("Chave nao encontrada\n");
+      *ver = 0;
+      return;
     }
-
-    // se a chave encontrada é menor que a requerida, imprime uma mensagem de falha
-    if(x->Chave > Ap->chaves[i-1].Chave)
-     {
-        if(Ap->kids[i] == NULL)
-        {
-          printf("Chave nao encontrada\n");
-          *ver = 0;
-          return;
-        }
-        else
-        {
-          btPesquisa(x, Ap->kids[i],seek,ver);
-        }
-     }
+    else
+    {
+      btPesquisa(x, Ap->kids[i],seek,ver);
+    }
+  }
 
 }
 
 // insere um novo nó na árvore
 void btInsertInNode(TipoApontador Ap, TipoRegistro Reg, TipoApontador ApDir)
 {
-    // delcarar variáveis
-    bool PosNotFound;
-    int k;
-    short cmp;
-    
-    // inicializar variáveis
-    k = Ap->numKeys; 
-    PosNotFound = (k > 0);
+  // delcarar variáveis
+  bool PosNotFound;
+  int k;
+  short cmp;
+  
+  // inicializar variáveis
+  k = Ap->numKeys; 
+  PosNotFound = (k > 0);
 
-    // enquanto não é encontrado o pos
-    while (PosNotFound)
+  // enquanto não é encontrado o pos
+  while (PosNotFound)
+  {
+    //cmp = strcmp(Reg.Chave,Ap->chaves[k-1].Chave);
+    if (Reg.Chave >= Ap->chaves[k-1].Chave) //Reg.Chave maior que chave do No arvores
     {
-      //cmp = strcmp(Reg.Chave,Ap->chaves[k-1].Chave);
-      if (Reg.Chave >= Ap->chaves[k-1].Chave) //Reg.Chave maior que chave do No arvores
-      {
-        PosNotFound = FALSE;
-        break;
-      }
-      Ap->chaves[k] = Ap->chaves[k-1];
-      Ap->kids[k+1] = Ap->kids[k];
-      k--;
-      if (k < 1) 
-      {
-        PosNotFound = FALSE;
-      }
+      PosNotFound = FALSE;
+      break;
     }
-    Ap->chaves[k] = Reg;
-    Ap->kids[k+1] = ApDir;
-    Ap->numKeys++;
+    Ap->chaves[k] = Ap->chaves[k-1];
+    Ap->kids[k+1] = Ap->kids[k];
+    k--;
+    if (k < 1) 
+    {
+      PosNotFound = FALSE;
+    }
+  }
+  Ap->chaves[k] = Reg;
+  Ap->kids[k+1] = ApDir;
+  Ap->numKeys++;
 }
 
 // insere elemento na árvore-B
 void btIns(TipoRegistro Reg, TipoApontador Ap, bool * Cresceu, TipoRegistro * RegRetorno, TipoApontador * ApRetorno)
 {
-    //printf("OI!\n");
+  //printf("OI!\n");
 
-    // delcarar variáveis
-    int i = 1;
-    int j;
-    short cmp;
-    TipoApontador ApTemp;
+  // delcarar variáveis
+  int i = 1;
+  int j;
+  short cmp;
+  TipoApontador ApTemp;
 
-    // se Ap tiver endereço NULL
-    if (Ap == NULL)
-    {
-      // setar os ponteiros para endereços inciais
-      *Cresceu = TRUE;
-      (*RegRetorno) = Reg;
-      (*ApRetorno) = NULL;
-      return;
-    }
+  // se Ap tiver endereço NULL
+  if (Ap == NULL)
+  {
+    // setar os ponteiros para endereços inciais
+    *Cresceu = TRUE;
+    (*RegRetorno) = Reg;
+    (*ApRetorno) = NULL;
+    return;
+  }
 
-    //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
+  //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
 
-    // enquanto o índice for menor que o número de chaves e o registro da chave 
-    // for maior que o da chave buscada 
-    while(i < Ap->numKeys && Reg.Chave > Ap->chaves[i-1].Chave)
-    { 
-      // incrementar o índice 
-      i++;
-    }
+  // enquanto o índice for menor que o número de chaves e o registro da chave 
+  // for maior que o da chave buscada 
+  while(i < Ap->numKeys && Reg.Chave > Ap->chaves[i-1].Chave)
+  { 
+    // incrementar o índice 
+    i++;
+  }
 
-    //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
+  //cmp = strcmp(Reg.Chave,Ap->chaves[i-1].Chave);
 
-    // se o registro da chave for igual ao da chave buscada
-    if(Reg.Chave == Ap->chaves[i-1].Chave)
-    {
-      // declarar mensagem de erro
-      printf("Erro: Registro ja existe na arvore bTree\n");
-      *Cresceu = FALSE;
-      return;
-    }
+  // se o registro da chave for igual ao da chave buscada
+  if(Reg.Chave == Ap->chaves[i-1].Chave)
+  {
+    // declarar mensagem de erro
+    printf("Erro: Registro ja existe na arvore bTree\n");
+    *Cresceu = FALSE;
+    return;
+  }
 
-    // se o registro da chave for menor que o da chave buscada
-    if(Reg.Chave < Ap->chaves[i-1].Chave)
-    { 
-      // decrementar o índice
-      i--;
-    }
+  // se o registro da chave for menor que o da chave buscada
+  if(Reg.Chave < Ap->chaves[i-1].Chave)
+  { 
+    // decrementar o índice
+    i--;
+  }
 
-    // inserir o índice na árvore B
-    btIns(Reg,Ap->kids[i],Cresceu,RegRetorno,ApRetorno);
+  // inserir o índice na árvore B
+  btIns(Reg,Ap->kids[i],Cresceu,RegRetorno,ApRetorno);
 
-    // se não existir o ponteiro Cresceu, retornar
-    if(!*Cresceu) 
-    {
-      return;
-    }
+  // se não existir o ponteiro Cresceu, retornar
+  if(!*Cresceu) 
+  {
+    return;
+  }
 
-    // se o número de chaves for menor que o número máximo de chaves,
-    // inserir a chave no nó daquela página da árvore B
-    if(Ap->numKeys < MAX_KEYS) //Pagina com espaço
-    {
-      btInsertInNode(Ap, *RegRetorno, *ApRetorno);
-      *Cresceu = FALSE;
-      return;
-    }
+  // se o número de chaves for menor que o número máximo de chaves,
+  // inserir a chave no nó daquela página da árvore B
+  if(Ap->numKeys < MAX_KEYS) //Pagina com espaço
+  {
+    btInsertInNode(Ap, *RegRetorno, *ApRetorno);
+    *Cresceu = FALSE;
+    return;
+  }
 
-    //Overflow da pagina => Divisao
-    ApTemp = (TipoApontador)malloc(sizeof(TipoPagina));
-    ApTemp->numKeys = 0; ApTemp->kids[0] = NULL;
+  //Overflow da pagina => Divisao
+  ApTemp = (TipoApontador)malloc(sizeof(TipoPagina));
+  ApTemp->numKeys = 0; ApTemp->kids[0] = NULL;
 
-    // se o índice for menor que a metade do número máximo de chaves
-    if(i < (MAX_KEYS/2)+1)
-    {
-      // concatenar os nós da árvore
-      btInsertInNode(ApTemp,Ap->chaves[MAX_KEYS-1], Ap->kids[MAX_KEYS]);
-      Ap->numKeys--;
-      btInsertInNode(Ap, *RegRetorno, *ApRetorno);//ApTemp
-    }
-    // se não for, inserir o nó no lugar selecionado
-    else 
-    {
-      btInsertInNode(ApTemp, *RegRetorno, *ApRetorno);
-    }
-    
-    // para j entre a metade do número máximo de chaves e o número máximo de chaves
-    for(j = (MAX_KEYS/2) + 2; j <= MAX_KEYS; j++)
-    {
-      // inserir a chave naquele nó
-      btInsertInNode(ApTemp,Ap->chaves[j-1],Ap->kids[j]);
-    }
+  // se o índice for menor que a metade do número máximo de chaves
+  if(i < (MAX_KEYS/2)+1)
+  {
+    // concatenar os nós da árvore
+    btInsertInNode(ApTemp,Ap->chaves[MAX_KEYS-1], Ap->kids[MAX_KEYS]);
+    Ap->numKeys--;
+    btInsertInNode(Ap, *RegRetorno, *ApRetorno);//ApTemp
+  }
+  // se não for, inserir o nó no lugar selecionado
+  else 
+  {
+    btInsertInNode(ApTemp, *RegRetorno, *ApRetorno);
+  }
+  
+  // para j entre a metade do número máximo de chaves e o número máximo de chaves
+  for(j = (MAX_KEYS/2) + 2; j <= MAX_KEYS; j++)
+  {
+    // inserir a chave naquele nó
+    btInsertInNode(ApTemp,Ap->chaves[j-1],Ap->kids[j]);
+  }
 
-    Ap->numKeys = MAX_KEYS/2;
-    ApTemp->kids[0] = Ap->kids[(MAX_KEYS/2) + 1];
-    *RegRetorno = Ap->chaves[MAX_KEYS/2];
-    *ApRetorno = ApTemp;
+  Ap->numKeys = MAX_KEYS/2;
+  ApTemp->kids[0] = Ap->kids[(MAX_KEYS/2) + 1];
+  *RegRetorno = Ap->chaves[MAX_KEYS/2];
+  *ApRetorno = ApTemp;
 }
 
 // inserir na árvore B
@@ -394,74 +394,74 @@ void btAntecessor(TipoApontador Ap, int Ind, TipoApontador ApPai, short *Diminui
 // função auxiliar para retirar nó da árvore B
 void btRet(TipoChave Ch, TipoApontador *Ap, short *Diminuiu)
 {
-    long j, Ind = 1;
-    TipoApontador Pag;
+  long j, Ind = 1;
+  TipoApontador Pag;
 
-    // checa se o nó existe na árvore B
-    if (*Ap == NULL)
+  // checa se o nó existe na árvore B
+  if (*Ap == NULL)
+  { 
+    printf("Erro: registro nao esta na arvore\n"); 
+    *Diminuiu = FALSE;
+    return;
+  }
+  
+  // se existir, incrementa os índices 
+  Pag = *Ap;
+  while (Ind < Pag->numKeys && Ch > Pag->chaves[Ind-1].Chave)
+  { 
+    Ind++;
+  }
+
+  // retira o nó da árvore
+  if (Ch == Pag->chaves[Ind-1].Chave)
+  { 
+    if (Pag->kids[Ind-1] == NULL)   /* TipoPagina folha */
     { 
-      printf("Erro: registro nao esta na arvore\n"); 
-      *Diminuiu = FALSE;
+      Pag->numKeys--;
+      *Diminuiu = (Pag->numKeys < (MAX_KEYS/2));
+      for (j = Ind; j <= Pag->numKeys; j++)
+      { 
+        Pag->chaves[j-1] = Pag->chaves[j];  
+        Pag->kids[j] = Pag->kids[j+1]; 
+      }
       return;
     }
-    
-    // se existir, incrementa os índices 
-    Pag = *Ap;
-    while (Ind < Pag->numKeys && Ch > Pag->chaves[Ind-1].Chave)
-    { 
-      Ind++;
-    }
 
-    // retira o nó da árvore
-    if (Ch == Pag->chaves[Ind-1].Chave)
-    { 
-      if (Pag->kids[Ind-1] == NULL)   /* TipoPagina folha */
-      { 
-        Pag->numKeys--;
-        *Diminuiu = (Pag->numKeys < (MAX_KEYS/2));
-        for (j = Ind; j <= Pag->numKeys; j++)
-        { 
-          Pag->chaves[j-1] = Pag->chaves[j];  
-          Pag->kids[j] = Pag->kids[j+1]; 
-        }
-        return;
-      }
+    /* TipoPagina nao e folha: trocar com antecessor */
+    btAntecessor(*Ap, Ind, Pag->kids[Ind-1], Diminuiu);
 
-      /* TipoPagina nao e folha: trocar com antecessor */
-      btAntecessor(*Ap, Ind, Pag->kids[Ind-1], Diminuiu);
-
-      if (*Diminuiu)
-      {
-        btReconstitui(Pag->kids[Ind-1], *Ap, Ind - 1, Diminuiu);
-        return;
-      }
-    }
-    if (Ch > Pag->chaves[Ind-1].Chave) 
-    {
-      Ind++;
-    }
-
-    btRet(Ch, &Pag->kids[Ind-1], Diminuiu);
-
-    if (*Diminuiu) 
+    if (*Diminuiu)
     {
       btReconstitui(Pag->kids[Ind-1], *Ap, Ind - 1, Diminuiu);
+      return;
     }
+  }
+  if (Ch > Pag->chaves[Ind-1].Chave) 
+  {
+    Ind++;
+  }
+
+  btRet(Ch, &Pag->kids[Ind-1], Diminuiu);
+
+  if (*Diminuiu) 
+  {
+    btReconstitui(Pag->kids[Ind-1], *Ap, Ind - 1, Diminuiu);
+  }
 }
 
 // retirar nó da árvore B
 void btRetira(TipoChave Ch, TipoApontador *Ap)
 {
-    short Diminuiu;
-    TipoApontador Aux;
-    btRet(Ch, Ap, &Diminuiu);
+  short Diminuiu;
+  TipoApontador Aux;
+  btRet(Ch, Ap, &Diminuiu);
 
-    if (Diminuiu && (*Ap)->numKeys == 0)  /* Arvore diminui na altura */
-    { 
-      Aux = *Ap;   
-      *Ap = Aux->kids[0];
-      free(Aux);
-    }
+  if (Diminuiu && (*Ap)->numKeys == 0)  /* Arvore diminui na altura */
+  { 
+    Aux = *Ap;   
+    *Ap = Aux->kids[0];
+    free(Aux);
+  }
 }
 /*
 void btGravaI(TipoApontador p, int nivel, FILE* file)
@@ -516,17 +516,17 @@ void btGravaI(TipoApontador p, int nivel, FILE *file)
 // gravar índices no arquivo
 void btGrava(TipoApontador p, FILE* file)
 {
-    int  n = 0;
-    btGravaI(p, n, file);
+  int  n = 0;
+  btGravaI(p, n, file);
 }
 
 // grava ínidice no arquivo de índices
 void btGravarIndice(TipoApontador Pag) {
-  	FILE * ArquivoIndice;
-  	ArquivoIndice = fopen("indicelista.bt", "w");
-  	btGrava(Pag, ArquivoIndice);
-  	fclose(ArquivoIndice);
-  	return;
+  FILE * ArquivoIndice;
+  ArquivoIndice = fopen("indicelista.bt", "w");
+  btGrava(Pag, ArquivoIndice);
+  fclose(ArquivoIndice);
+  return;
 }
 
 // determinar tipo de registro da árvore B
@@ -539,11 +539,10 @@ void btTipoRegistroI(TipoApontador p,int nivel)
   }
 
   printf("Nivel %d :\n",nivel);
-  for(i = 0; i<p->numKeys; i++)
+  for(i = 0; i<p->numKeys; i++) 
   {
-    imprimeRegistro(p->chaves[i]);
+    imprimirDados(p->chaves[i]);
   }
-
   putchar('\n');
   nivel++;
   for(i = 0; i<= p->numKeys; i++)
@@ -559,12 +558,78 @@ void btTipoRegistro(TipoApontador p)
   btTipoRegistroI(p,n);
 }
 
-// buscar registro na árvore B
 void btBuscarRegistro(TipoApontador p) 
 {
-  // declarar variáveis
   int verifica;
   TipoRegistro Reg;
+  printf("Entre com a chave Primaria\n");
+  printf("Chave: "); scanf("%s", Reg.chavePrimaria);
+  Reg.Chave = ChaveNumerica(Reg.chavePrimaria);
+  int seek = 0;
+  btPesquisa(&Reg,p,&seek,&verifica);
+
+  if(verifica == 1){
+    printf("\nConteudo do Registro: \n");
+    imprimirDados(Reg);
+    printf("Numero de buscas (seeks): %d\n", seek);
+    return;
+  }
+  else{
+    return;
+  }
+}
+
+void IncluirRegistro(void)
+{
+  long pos;
+  FILE * arqDados = fopen("lista.txt","a");
+  pos = ftell(arqDados);
+  printf("Pos:%ld\n",pos);
+  TipoRegistro Reg;
+  printf("Digite os dados do novo Registro\n");
+  printf("Nome: "); scanf("\n%[^\n]", Reg.nome);
+  printf("Matricula:"); scanf("%d",&Reg.matricula);
+  printf("Curso: "); scanf("%s", Reg.curso);
+  printf("Turma: "); scanf("\n%c", &Reg.turma);
+  size_t prevlen = strlen(Reg.nome);
+  memset(Reg.nome + prevlen, ' ', 39 - prevlen);
+  *(Reg.nome + 39) = '\0';
+
+  imprimirRegistro(Reg);
+
+
+
+
+  fprintf(arqDados,"%s\t",(char*)Reg.nome);
+  //fprintf(arqDados,"   ");
+  fprintf(arqDados,"%5.d ",Reg.matricula);
+  fprintf(arqDados," %s\t ",Reg.curso);
+  fprintf(arqDados,"%c\n",Reg.turma);
+
+  imprimirRegistro(Reg);
+  fclose(arqDados);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
   // ler a chave dada pelo usuário
   printf("Chave: "); 
